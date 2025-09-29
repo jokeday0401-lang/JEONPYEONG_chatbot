@@ -16,15 +16,22 @@ import fitz  # PyMuPDF
 import re
 
 
-############################### 🔑 환경변수 (GitHub / Streamlit Cloud Secrets에서 자동 로드됨) ##########################
-openai_api_key = os.getenv("OPENAI_API_KEY")
+############################### 🔑 환경변수 (Streamlit Cloud Secrets 자동 로드) ##########################
+import streamlit as st
+import os
+
+# Streamlit Cloud에서 Secrets에 등록된 값 자동 불러오기
+# 👉 Streamlit Cloud에서 [Settings → Secrets] 메뉴에 다음처럼 등록
+# OPENAI_API_KEY = sk-xxxxxxx
+
+openai_api_key = st.secrets["OPENAI_API_KEY"]
 
 if not openai_api_key:
-    st.error("⚠️ 환경변수 OPENAI_API_KEY가 설정되지 않았습니다. GitHub Secrets 또는 Streamlit Secrets에 등록해주세요.")
+    st.error("⚠️ Streamlit Secrets에 OPENAI_API_KEY가 설정되지 않았습니다.")
     st.stop()
 
-os.environ["OPENAI_API_KEY"] = openai_api_key  # LangChain, OpenAI 라이브러리용 설정
-
+# LangChain과 OpenAI 라이브러리가 참조할 수 있도록 환경변수에도 등록
+os.environ["OPENAI_API_KEY"] = openai_api_key
 
 ############################### 1단계 : PDF 문서를 벡터DB에 저장하는 함수들 ##########################
 
@@ -164,3 +171,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+스트림릿 클라우드로 배포하고 있고, 너 말대로 스트림릿 클라우드에서 API 키 비밀로 등록할테니까, 그걸 자동으로 불러오는 코드를 써줘 
